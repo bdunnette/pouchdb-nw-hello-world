@@ -18,9 +18,30 @@
   });
  
   var LevelPouchDB = require('pouchdb');
-  new LevelPouchDB('using-leveldb').info().then(function () {
+  var lpdb = new LevelPouchDB('using-leveldb');
+
+  console.log(lpdb);
+
+  lpdb.info().then(function () {
     leveldb.innerHTML = '&#10003';
   }).catch(function (err) {
     leveldb.innerHTML = "Nope, got an error: " + err;
+  });
+
+  var sync = LevelPouchDB.sync('using-leveldb', 'http://localhost:5984/diener', {live: true})
+  .on('change', function (info) {
+    // handle change
+    console.log(info);
+  }).on('complete', function (info) {
+    // handle complete
+    console.log(info);
+  }).on('error', function (err) {
+    // handle error
+    console.log(info);
+  });
+
+  lpdb.allDocs({include_docs: true, attachments: true}, function(err, response) { 
+    console.log(err);
+    console.log(response);
   });
 })();
